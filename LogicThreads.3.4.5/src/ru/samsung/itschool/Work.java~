@@ -12,7 +12,7 @@ class Work extends Thread {
 		int max=(int) (20*Math.random());
 		for (int i = 0; i < max; i++) {
 			try {
-				sleep((long)(1000*Math.random()));
+				sleep(1000);
 				System.out.print(threadName);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
