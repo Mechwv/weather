@@ -14,7 +14,7 @@ class Client extends Thread {
 //		synchronized (account) {
 			if (account.money - 70 > 0) { // достаточно ли средств ?
 				try {
-					sleep((long) (1000 * Math.random()));  // иммитируем задержку банкомата
+					sleep((long) (1000 * Math.random()));  // имитируем задержку банкомата
 				} catch (InterruptedException e) {}
 				account.money -= 70;  // снимаем со счета нужную сумму
 				System.out.println(account.money);
