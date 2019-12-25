@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.google.gson.Gson;
@@ -24,18 +25,21 @@ import java.util.Scanner;
 public class MainActivity extends AppCompatActivity {
 
     Button btn;
-    TextView tv;
+    Button trans;
+    EditText tv;
+    String text;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        btn = findViewById(R.id.button);
-        tv = findViewById(R.id.textView);
-        btn.setOnClickListener(new View.OnClickListener() {
+        trans = findViewById(R.id.translate);
+        tv = findViewById(R.id.editText);
+        trans.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 MyDownload weather = new MyDownload();
+                text = tv.getText().toString();
                 weather.execute();
             }
         });
@@ -45,11 +49,13 @@ public class MainActivity extends AppCompatActivity {
     private class MyDownload extends AsyncTask<Void,Void,String> {
 
         HttpURLConnection httpurl;
-
         @Override
         protected String doInBackground(Void... voids) {
+
+            String a = "https://translate.yandex.net/api/v1.5/tr.json/translate?key=trnsl.1.1.20191225T105039Z.94360703031b8ce7.4520056b3c021dd82d6d2af49538aa2ac41e7b97&lang=ru&text=";
+            a = a + text;
             try {
-                URL url = new URL("http://api.weatherstack.com/current?access_key=ba0850a0e6f20a7100155aed02a1cf12&query=Moscow");
+                URL url = new URL(a);
                 httpurl = (HttpURLConnection) url.openConnection();
                 httpurl.setRequestMethod("GET");
                 httpurl.connect();
@@ -59,8 +65,7 @@ public class MainActivity extends AppCompatActivity {
                 while (scan.hasNextLine()) {
                     buffer.append(scan.nextLine());
                 }
-                //Gson gson = new GsonBuilder().setPrettyPrinting().create();
-                //gson.fromJson(buffer.toString(),Weather.class);
+
                 return buffer.toString();
 
 
@@ -75,9 +80,8 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             Gson gson = new Gson();
-            Weather w = gson.fromJson(s,Weather.class);
-            s = "Temp: " + w.getCurrent().getTemperature() + "\nCity: "+w.getLocation().getName() + "\nWeather: "+ w.getCurrent().getWeatherDescriptions();
-            tv.setText(s);
+            Translate t = gson.fromJson(s,Translate.class);
+            tv.setText(t.getText().get(0).toString());
         }
     }
 }
